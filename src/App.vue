@@ -1,10 +1,8 @@
 <template>
   <div id="app">
-    <Funding
+    <Funding @bewilligtEvent="updateBewilligt" @zaehlpunktEvent="updateZaehlpunkt"
         :data="data"
         :max="maxFunding"
-        :updateBewilligung="updateBewilligt"
-        :updateZaehlpunkt="updateZaehlpunkt"
     />
   </div>
 </template>

@@ -13,7 +13,7 @@
     </thead>
     <tbody>
     <tr v-for="(item, index) in data" :key="index">
-      <td>{{ item.name }}</td><td>{{ item.plz }}</td><td v-if="!editingActive" @click="activateEditing()">{{ item.zaehlpunkt }}</td><td v-else><input id="textField_zaehlpunkt" type="text"  :value="item.zaehlpunkt" @change="updateIndexValue(index)"></td><td>{{ item.kwPeak}}</td><td><input type="checkbox" :checked="item.bewilligt" @change="updateBewilligung(index)"></td>
+      <td>{{ item.name }}</td><td>{{ item.plz }}</td><td v-if="!editingActive" @click="activateEditing()">{{ item.zaehlpunkt }}</td><td v-else><input id="textField_zaehlpunkt" type="text"  :value="item.zaehlpunkt" @change="updateIndexValue(index)"></td><td>{{ item.kwPeak}}</td><td><input type="checkbox" :checked="item.bewilligt" @change="$emit('bewilligtEvent', index)"></td><!--"updateBewilligung(index)"-->
     </tr>
     </tbody>
   </table>
@@ -30,10 +30,10 @@ export default
   props: {
     data: { type: Array, required: true },
     max: {type: Number, required: true},
-    updateBewilligung: {type: Function, required: true},
-    updateZaehlpunkt: { type: Function, required: true},
+    /*updateBewilligung: {type: Function, required: true},*/
+    /*updateZaehlpunkt: { type: Function, required: true},*/
   },
-  setup()
+  setup(props, context)
   {
     const editingActive = ref(false);//ref(false);
     const indexInput = ref();
@@ -45,15 +45,6 @@ export default
       console.log(editingActive);
     }
 
-    /*
-    function saveEdit(index)
-    {
-      editingActive.value = false;
-      this.props.data[index].zaehlpunkt = document.getElementById("textField_zaehlpunkt").value;
-      console.log(document.getElementById("textField_zaehlpunkt").value);
-      console.log(this.props.data[index]);
-    }
-     */
     function updateIndexValue(index)
     {
       indexInput.value = index;
@@ -67,7 +58,14 @@ export default
       editingActive.value = false;
     }
 
-    return { editingActive, activateEditing, cancelEditing, updateIndexValue, indexInput, valueInput }
+    function updateZaehlpunkt()
+    {
+      editingActive.value = false;
+
+      context.emit('zaehlpunktEvent', indexInput.value, valueInput.value);
+    }
+
+    return { editingActive, activateEditing, cancelEditing, updateIndexValue, updateZaehlpunkt }
   }
 };
 </script>
